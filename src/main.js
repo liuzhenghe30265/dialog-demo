@@ -9,6 +9,12 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
+import 'view-design/dist/styles/iview.css'
+import { Modal } from 'view-design'
+Vue.component('Modal', Modal)
+
+import '@/utils/DragAndZoom.js'
+
 Vue.config.productionTip = false
 
 new Vue({

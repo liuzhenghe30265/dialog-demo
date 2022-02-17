@@ -9,9 +9,9 @@ const routes = [
     component: resolve => require(['@/views/Home.vue'], resolve),
   },
   {
-    path: '/About',
-    name: 'About',
-    component: resolve => require(['@/views/About.vue'], resolve),
+    path: '/iviewModal',
+    name: 'iviewModal',
+    component: resolve => require(['@/views/iviewModal.vue'], resolve),
   },
 ]
 
