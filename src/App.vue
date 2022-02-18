@@ -5,7 +5,7 @@
       id="nav">
       <router-link
         to="/">
-        Home
+        ElementUI
       </router-link>
       |
       <router-link

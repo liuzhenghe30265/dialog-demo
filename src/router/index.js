@@ -5,8 +5,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: resolve => require(['@/views/Home.vue'], resolve),
+    name: 'ElementUI',
+    component: resolve => require(['@/views/ElementUI.vue'], resolve),
   },
   {
     path: '/iviewModal',

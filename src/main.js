@@ -14,6 +14,7 @@ import { Modal } from 'view-design'
 Vue.component('Modal', Modal)
 
 import '@/utils/DragAndZoom.js'
+import '@/utils/DialogDrag.js'
 
 Vue.config.productionTip = false
 

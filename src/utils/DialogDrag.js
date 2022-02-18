@@ -1,84 +1,47 @@
 import Vue from 'vue'
 
 /**
-v-DragAndZoom: 弹窗拖拽和缩放
-该指令针对 iview Modal，修改 dialogHeaderEl，dragDom 等配置适配其他弹窗
-使用示例：
-    <Modal
-      v-model="visible.show"
-      v-DragAndZoom="DragAndZoom"
-      draggable
-      sticky
-      reset-drag-position
-      footer-hide
-      scrollable
-      :mask="false"
-      class-name="custom_modal_style"
-      :title="title"
-      @on-ok="ok"
-      @on-cancel="cancel"
-      :width="width">
-      <div>
-        <slot
-          name="content" />
-      </div>
-    </Modal>
-
-  methods: {
-    // 接收通过 binding.value() 传递过来的值
-    DragAndZoom (data) {
-      console.log('.............data', data)
-    },
-  }
+v-DialogDrag: 弹窗拖拽缩放（Element Dialog）
  */
-Vue.directive('DragAndZoom', {
+Vue.directive('DialogDrag', {
   // eslint-disable-next-line no-unused-vars
   bind (el, binding, vnode, oldVnode) {
-    const dialogHeaderEl = el.querySelector('.ivu-modal-header')
-    const dragDom = el.querySelector('.ivu-modal-content')
+    const dialogHeaderEl = el.querySelector('.el-dialog__header')
+    const dragDom = el.querySelector('.el-dialog')
     dialogHeaderEl.style.cursor = 'move'
-    // 元素初始的宽（再次打开弹窗时，还原弹窗最初的尺寸）
-    const initWidth = parseInt(dragDom.getAttribute('style').replace(/[^0-9]/ig, ''))
-    binding.value({
-      el,
-      initWidth
-    })
 
     // 获取原有属性 ie dom 元素 currentStyle，火狐谷歌 window.getComputedStyle(dom元素, null)
     const sty = dragDom.currentStyle || window.getComputedStyle(dragDom, null)
 
-    // PC 端（iview Modal 自带拖拽功能，仅需兼容下 ios 设备）
-    // dialogHeaderEl.onmousedown = (e) => {
-    //   // 鼠标按下，计算当前元素距离可视区的距离
-    //   const disX = e.clientX - dialogHeaderEl.offsetLeft
-    //   const disY = e.clientY - dialogHeaderEl.offsetTop
+    // PC 端
+    dialogHeaderEl.onmousedown = (e) => {
+      // 鼠标按下，计算当前元素距离可视区的距离
+      const disX = e.clientX - dialogHeaderEl.offsetLeft
+      const disY = e.clientY - dialogHeaderEl.offsetTop
 
-    //   let styL, styT
-    //   // 在 ie 中第一次获取到的值为组件自带 50%，移动之后赋值为 px
-    //   if (sty.left.includes('%')) {
-    //     styL = +document.body.clientWidth * (+sty.left.replace(/\\%/g, '') / 100)
-    //     styT = +document.body.clientHeight * (+sty.top.replace(/\\%/g, '') / 100)
-    //   } else {
-    //     // 获取到的值带 px 正则匹配替换
-    //     styL = +sty.left.replace(/\px/g, '')
-    //     styT = +sty.top.replace(/\px/g, '')
-    //   }
+      let styL, styT
+      // 在 ie 中第一次获取到的值为组件自带 50%，移动之后赋值为 px
+      if (sty.left.includes('%')) {
+        styL = +document.body.clientWidth * (+sty.left.replace(/\\%/g, '') / 100)
+        styT = +document.body.clientHeight * (+sty.top.replace(/\\%/g, '') / 100)
+      } else {
+        // 获取到的值带 px 正则匹配替换
+        styL = +sty.left.replace(/\px/g, '')
+        styT = +sty.top.replace(/\px/g, '')
+      }
 
-    //   document.onmousemove = function (e) {
-    //     const l = e.clientX - disX
-    //     const t = e.clientY - disY
-    //     dragDom.style.left = `${l + styL}px`
-    //     dragDom.style.top = `${t + styT}px`
+      document.onmousemove = function (e) {
+        const l = e.clientX - disX
+        const t = e.clientY - disY
+        dragDom.style.left = `${l + styL}px`
+        dragDom.style.top = `${t + styT}px`
+      }
 
-    //     // 将位置数据传出去
-    //     // binding.value({x:e.pageX,y:e.pageY})
-    //   }
-
-    //   document.onmouseup = function () {
-    //     document.onmousemove = null
-    //     document.onmouseup = null
-    //   }
-    // }
+      document.onmouseup = function () {
+        document.onmousemove = null
+        document.onmouseup = null
+      }
+    }
 
     // ios 设备
     dialogHeaderEl.ontouchstart = e => {
@@ -129,11 +92,6 @@ Vue.directive('DragAndZoom', {
         }
         dragDom.style.width = W + 'px'
         dragDom.style.height = H + 'px'
-        // 将变化的宽高传递出去
-        binding.value({
-          W,
-          H
-        })
       }
       document.onmouseup = function () {
         document.onmousemove = null
